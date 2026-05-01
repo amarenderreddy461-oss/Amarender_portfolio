@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amarender Reddy — Senior .NET Full Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #030b12;
+    --bg2: #061420;
+    --accent: #00e5ff;
+    --accent2: #7b5ea7;
+    --accent3: #00ff99;
+    --text: #e8f4f8;
+    --muted: #6a8fa0;
+    --card: rgba(0,229,255,0.04);
+    --border: rgba(0,229,255,0.15);
+    --glow: 0 0 30px rgba(0,229,255,0.2);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── CANVAS ── */
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(3,11,18,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+  }
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-name {
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .hero-name span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-title {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--muted);
+    font-weight: 400;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn {
+    padding: 0.8rem 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.25s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+  }
+  .btn-primary:hover { box-shadow: 0 0 30px rgba(0,229,255,0.4); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .btn-outline:hover { background: rgba(0,229,255,0.08); transform: translateY(-2px); }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.5s forwards;
+  }
+  .scroll-hint span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    padding: 8rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+  .about-text p strong { color: var(--text); }
+  .cert-list {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .cert-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .cert-badge {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .about-visual {
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #about-canvas { width: 100%; height: 100%; }
+
+  /* ── SKILLS ── */
+  #skills {
+    padding: 8rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .skill-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,229,255,0.4);
+    box-shadow: var(--glow);
+  }
+  .skill-card:hover::before { opacity: 1; }
+  .skill-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .skill-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .skill-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    background: rgba(0,229,255,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(0,229,255,0.2);
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience {
+    padding: 8rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .timeline {
+    position: relative;
+    padding-left: 3rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -3.15rem;
+    top: 0.4rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .timeline-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .timeline-company {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .timeline-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2px;
+  }
+  .timeline-role {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .timeline-domain {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    margin-bottom: 1.2rem;
+  }
+  .timeline-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+  }
+  .timeline-highlights {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .timeline-highlights li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+  .timeline-highlights li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+  .timeline-highlights li strong { color: var(--text); }
+
+  /* ── TECH STACK 3D ORBIT ── */
+  #stack {
+    padding: 8rem 4rem;
+    text-align: center;
+  }
+  #orbit-canvas {
+    width: 100%;
+    height: 500px;
+    cursor: grab;
+  }
+  #orbit-canvas:active { cursor: grabbing; }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: 8rem 4rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem 1.5rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .contact-card:hover {
+    border-color: rgba(0,229,255,0.5);
+    box-shadow: var(--glow);
+    transform: translateY(-4px);
+  }
+  .contact-icon { font-size: 1.8rem; }
+  .contact-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .contact-value { font-size: 0.85rem; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 3rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    #about, #skills, #experience, #stack, #contact { padding: 5rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .about-visual { height: 250px; }
+    .hero-stats { gap: 2rem; }
+    .timeline { padding-left: 2rem; }
+    .timeline-dot { left: -2.15rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <span class="nav-logo">AR // Portfolio</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-tag">Senior .NET Full Stack Developer</p>
+  <h1 class="hero-name">Amarender<br><span>Reddy</span></h1>
+  <p class="hero-title">10+ years building enterprise-grade systems across Healthcare, Banking & Government</p>
+  <div class="hero-stats">
+    <div class="stat-item"><span class="stat-num">10+</span><span class="stat-label">Years Experience</span></div>
+    <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">Major Companies</span></div>
+    <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">Microsoft Certs</span></div>
+    <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">Domains Served</span></div>
+  </div>
+  <div class="hero-cta">
+    <a href="#experience" class="btn btn-primary">View Experience</a>
+    <a href="#contact" class="btn btn-outline">Get in Touch</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header">
+    <span class="section-tag">01 // About</span>
+    <h2 class="section-title">The Developer</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Senior <strong>.NET Full Stack Developer</strong> with over a decade of hands-on experience building and supporting enterprise applications in <strong>Healthcare, Banking, Government, Financial Services, and Retail</strong>.</p>
+      <p>Deep expertise in <strong>C#, .NET Core 6/7/8, ASP.NET Core Web API, Entity Framework Core</strong>, and modern cloud-native architectures on <strong>Azure, AWS, and GCP</strong>.</p>
+      <p>Experienced in <strong>microservices, CQRS, Clean Architecture, Domain-Driven Design</strong>, and resilience patterns. Skilled at turning complex business requirements into scalable, maintainable, production-ready systems.</p>
+      <div class="cert-list">
+        <div class="cert-item"><div class="cert-badge"></div>Microsoft Certified: Azure Developer Associate (AZ-204)</div>
+        <div class="cert-item"><div class="cert-badge"></div>Microsoft Certified: Azure Solutions Architect Expert (AZ-305)</div>
+        <div class="cert-item"><div class="cert-badge"></div>Microsoft Certified: Azure AI Engineer Associate (AI-102)</div>
+        <div class="cert-item"><div class="cert-badge"></div>AWS Certified Solutions Architect – Associate</div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <canvas id="about-canvas"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header">
+    <span class="section-tag">02 // Skills</span>
+    <h2 class="section-title">Technical Arsenal</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <span class="skill-icon">⚙️</span>
+      <div class="skill-cat">Backend</div>
+      <h3>.NET Ecosystem</h3>
+      <div class="skill-tags">
+        <span class="tag">C#</span><span class="tag">.NET 6/7/8</span><span class="tag">ASP.NET Core</span>
+        <span class="tag">EF Core</span><span class="tag">ADO.NET</span><span class="tag">LINQ</span>
+        <span class="tag">Minimal APIs</span><span class="tag">SignalR</span><span class="tag">gRPC</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <span class="skill-icon">🖥️</span>
+      <div class="skill-cat">Frontend</div>
+      <h3>Modern UI</h3>
+      <div class="skill-tags">
+        <span class="tag">Angular</span><span class="tag">React.js</span><span class="tag">TypeScript</span>
+        <span class="tag">RxJS</span><span class="tag">Redux</span><span class="tag">NgRx</span>
+        <span class="tag">HTML5</span><span class="tag">CSS3</span><span class="tag">Bootstrap</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <span class="skill-icon">☁️</span>
+      <div class="skill-cat">Cloud & DevOps</div>
+      <h3>Cloud Native</h3>
+      <div class="skill-tags">
+        <span class="tag">Azure</span><span class="tag">AKS</span><span class="tag">Docker</span>
+        <span class="tag">Kubernetes</span><span class="tag">Terraform</span><span class="tag">Helm</span>
+        <span class="tag">Azure DevOps</span><span class="tag">GitHub Actions</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <span class="skill-icon">🗄️</span>
+      <div class="skill-cat">Data</div>
+      <h3>Databases</h3>
+      <div class="skill-tags">
+        <span class="tag">SQL Server</span><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span>
+        <span class="tag">Redis</span><span class="tag">Cosmos DB</span><span class="tag">Dapper</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <span class="skill-icon">📨</span>
+      <div class="skill-cat">Messaging</div>
+      <h3>Async & Events</h3>
+      <div class="skill-tags">
+        <span class="tag">Kafka</span><span class="tag">Azure Service Bus</span><span class="tag">RabbitMQ</span>
+        <span class="tag">AWS SQS/SNS</span><span class="tag">MSMQ</span><span class="tag">Polly</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <span class="skill-icon">🔐</span>
+      <div class="skill-cat">Security</div>
+      <h3>Auth & Compliance</h3>
+      <div class="skill-tags">
+        <span class="tag">OAuth 2.0</span><span class="tag">OpenID Connect</span><span class="tag">JWT</span>
+        <span class="tag">Azure AD B2C</span><span class="tag">RBAC</span><span class="tag">HIPAA</span><span class="tag">FINRA</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <span class="skill-icon">🏗️</span>
+      <div class="skill-cat">Architecture</div>
+      <h3>Design Patterns</h3>
+      <div class="skill-tags">
+        <span class="tag">Microservices</span><span class="tag">CQRS</span><span class="tag">Clean Architecture</span>
+        <span class="tag">DDD</span><span class="tag">MediatR</span><span class="tag">AutoMapper</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <span class="skill-icon">📊</span>
+      <div class="skill-cat">Observability</div>
+      <h3>Monitoring & SRE</h3>
+      <div class="skill-tags">
+        <span class="tag">OpenTelemetry</span><span class="tag">App Insights</span><span class="tag">Serilog</span>
+        <span class="tag">Azure Monitor</span><span class="tag">AWS CloudWatch</span><span class="tag">Health Checks</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header">
+    <span class="section-tag">03 // Experience</span>
+    <h2 class="section-title">Career Journey</h2>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-company">Centene Corporation</span>
+        <span class="timeline-period">Mar 2023 – Present</span>
+      </div>
+      <div class="timeline-role">Senior .NET Full Stack Developer · St. Louis, MO</div>
+      <span class="timeline-domain">Healthcare</span>
+      <div class="timeline-body">
+        <ul class="timeline-highlights">
+          <li>Built and maintained <strong>REST APIs</strong> for claims processing, eligibility checks, provider search and payment workflows using ASP.NET Core & C#.</li>
+          <li>Led <strong>.NET 8 upgrade</strong> while maintaining .NET 6 production services; improved SQL Server performance via EF Core, LINQ, and execution-plan tuning.</li>
+          <li>Implemented <strong>Kafka & Azure Service Bus</strong> for claim events, retries, and downstream messaging; added Redis caching for reference data.</li>
+          <li>Built <strong>Angular UI</strong> components for claims status, provider lookup, member dashboard; improved accessibility and reduced duplicate logic.</li>
+          <li>Managed deployments via <strong>Azure DevOps, Docker, AKS, Helm, and Terraform</strong>; implemented OpenTelemetry, correlation IDs, and health checks.</li>
+          <li>Handled <strong>X12 EDI (837, 835, 834, 276/277)</strong> healthcare integration flows; mentored junior developers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-company">JPMorgan Chase</span>
+        <span class="timeline-period">Oct 2022 – Feb 2023</span>
+      </div>
+      <div class="timeline-role">Senior .NET Full Stack Developer · New York City, NY</div>
+      <span class="timeline-domain">Banking</span>
+      <div class="timeline-body">
+        <ul class="timeline-highlights">
+          <li>Developed <strong>financial transaction REST APIs</strong> for settlement processing, transaction history, and portfolio dashboard using .NET 6/7.</li>
+          <li>Built <strong>React.js</strong> Azure dashboard with refactored reusable modules, improved routing, and Redux state management.</li>
+          <li>Secured APIs with <strong>OAuth 2.0, JWT, Azure AD, RBAC</strong>; tuned SQL Server stored procedures for settlement workloads.</li>
+          <li>Integrated <strong>Kafka and Azure Service Bus</strong> for async downstream communication; set up CI/CD with GitHub Actions and Docker.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-company">State of Missouri</span>
+        <span class="timeline-period">May 2020 – Sep 2022</span>
+      </div>
+      <div class="timeline-role">Senior .NET Full Stack Developer · Jefferson City, MO</div>
+      <span class="timeline-domain">Government / Public Sector</span>
+      <div class="timeline-body">
+        <ul class="timeline-highlights">
+          <li>Built citizen-facing apps for <strong>licensing, permits, tax filing, and public health reporting</strong> using .NET Core/.NET 6 & Angular.</li>
+          <li>Implemented <strong>Clean/Onion Architecture</strong>, versioned APIs with backward compatibility, and NIST-aligned security controls.</li>
+          <li>Used <strong>Azure API Management</strong> for routing, throttling, and inter-agency API exposure; RabbitMQ for permit notifications.</li>
+          <li>Managed Azure App Services, Functions, Blob Storage, Application Gateway, and Application Insights deployments.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-company">City Bank</span>
+        <span class="timeline-period">May 2019 – Apr 2020</span>
+      </div>
+      <div class="timeline-role">.NET Full Stack Developer · Edison, NJ</div>
+      <span class="timeline-domain">Fund Accounting & Investment</span>
+      <div class="timeline-body">
+        <ul class="timeline-highlights">
+          <li>Developed <strong>NAV calculation, position reconciliation, corporate actions, and GL posting</strong> modules using ASP.NET MVC 5 & React.js.</li>
+          <li>Built operations dashboards with <strong>React.js</strong> for exception tracking and reconciliation break analysis.</li>
+          <li>Integrated AWS SQS, Lambda, S3 for fund-level message processing and downstream publication events.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-company">Tech Mahindra</span>
+        <span class="timeline-period">Jun 2018 – May 2019</span>
+      </div>
+      <div class="timeline-role">.NET Developer · Hyderabad, India</div>
+      <span class="timeline-domain">Banking</span>
+      <div class="timeline-body">
+        <ul class="timeline-highlights">
+          <li>Built banking modules for <strong>loan origination, account management, and trade settlement</strong> using ASP.NET MVC & WCF.</li>
+          <li>Developed WCF SOAP services for credit bureau and settlement platform integrations; MSMQ for transactional messaging.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-company">Mphasis Limited</span>
+        <span class="timeline-period">Jun 2016 – May 2018</span>
+      </div>
+      <div class="timeline-role">Junior .NET Developer · Hyderabad, India</div>
+      <span class="timeline-domain">E-Commerce / Retail</span>
+      <div class="timeline-body">
+        <ul class="timeline-highlights">
+          <li>Built ASP.NET MVC retail apps for <strong>product catalog, order management, and customer accounts</strong>; developed Web API 2 services for mobile integrations.</li>
+          <li>Implemented ASP.NET Identity, payment gateway, email/SMS integrations, and Windows Service background jobs.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 3D ORBIT / TECH STACK -->
+<section id="stack">
+  <div class="section-header">
+    <span class="section-tag">04 // Stack</span>
+    <h2 class="section-title">Technology Orbit</h2>
+    <p style="color:var(--muted);margin-top:1rem;font-size:0.9rem;">Drag to rotate · Scroll to zoom</p>
+  </div>
+  <canvas id="orbit-canvas"></canvas>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header">
+    <span class="section-tag">05 // Contact</span>
+    <h2 class="section-title">Let's Connect</h2>
+  </div>
+  <div class="contact-grid">
+    <a href="mailto:amarenderreddy461@gmail.com" class="contact-card">
+      <span class="contact-icon">✉</span>
+      <span class="contact-label">Email</span>
+      <span class="contact-value">amarenderreddy461@gmail.com</span>
+    </a>
+    <a href="tel:+13312131516" class="contact-card">
+      <span class="contact-icon">☏</span>
+      <span class="contact-label">Phone</span>
+      <span class="contact-value">+1 (331) 213-1516</span>
+    </a>
+    <a href="https://www.linkedin.com/in/amarendar-reddy-729169160/" target="_blank" class="contact-card">
+      <span class="contact-icon">in</span>
+      <span class="contact-label">LinkedIn</span>
+      <span class="contact-value">View Profile</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 Amarender Reddy — Senior .NET Full Stack Developer
+</footer>
+
+<script>
+// ─── ANIMATED BACKGROUND (particle grid) ───────────────────────────
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let bgW, bgH, particles = [];
+
+function resizeBg() {
+  bgW = bgCanvas.width = window.innerWidth;
+  bgH = bgCanvas.height = window.innerHeight;
+}
+resizeBg();
+window.addEventListener('resize', resizeBg);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * bgW;
+    this.y = Math.random() * bgH;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.life = 0; this.maxLife = 300 + Math.random() * 400;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.maxLife || this.x < 0 || this.x > bgW || this.y < 0 || this.y > bgH) this.reset();
+  }
+  draw() {
+    const alpha = Math.sin(this.life / this.maxLife * Math.PI) * 0.6;
+    bgCtx.beginPath();
+    bgCtx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    bgCtx.fillStyle = `rgba(0,229,255,${alpha})`;
+    bgCtx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function drawBg() {
+  bgCtx.clearRect(0, 0, bgW, bgH);
+  for (let i = 0; i < particles.length; i++) {
+    particles[i].update(); particles[i].draw();
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 100) {
+        bgCtx.beginPath();
+        bgCtx.moveTo(particles[i].x, particles[i].y);
+        bgCtx.lineTo(particles[j].x, particles[j].y);
+        bgCtx.strokeStyle = `rgba(0,229,255,${(1 - d/100) * 0.12})`;
+        bgCtx.lineWidth = 0.5;
+        bgCtx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// ─── ABOUT CANVAS (rotating DNA helix) ─────────────────────────────
+const ac = document.getElementById('about-canvas');
+const ax = ac.getContext('2d');
+
+function resizeAbout() {
+  ac.width = ac.offsetWidth * devicePixelRatio;
+  ac.height = ac.offsetHeight * devicePixelRatio;
+  ax.scale(devicePixelRatio, devicePixelRatio);
+}
+resizeAbout();
+
+let angle = 0;
+function drawAbout() {
+  const w = ac.offsetWidth, h = ac.offsetHeight;
+  ax.clearRect(0, 0, w, h);
+  const cx = w/2, cy = h/2;
+  const n = 14, amp = 60, freq = 0.5;
+
+  for (let i = 0; i < n; i++) {
+    const t = (i / n) * Math.PI * 2 + angle;
+    const x1 = cx + Math.sin(t) * amp;
+    const x2 = cx - Math.sin(t) * amp;
+    const y = cy - (n/2)*24 + i*24;
+
+    // rung
+    const ca = Math.abs(Math.cos(t));
+    ax.beginPath();
+    ax.moveTo(x1, y); ax.lineTo(x2, y);
+    ax.strokeStyle = `rgba(0,229,255,${ca * 0.5})`;
+    ax.lineWidth = 2; ax.stroke();
+
+    // left dot
+    ax.beginPath(); ax.arc(x1, y, 4, 0, Math.PI*2);
+    ax.fillStyle = `rgba(0,229,255,${ca})`;
+    ax.fill();
+    // right dot
+    ax.beginPath(); ax.arc(x2, y, 4, 0, Math.PI*2);
+    ax.fillStyle = `rgba(123,94,167,${ca})`;
+    ax.fill();
+  }
+  angle += 0.02;
+  requestAnimationFrame(drawAbout);
+}
+drawAbout();
+
+// ─── 3D ORBIT CANVAS ────────────────────────────────────────────────
+const oc = document.getElementById('orbit-canvas');
+const ox = oc.getContext('2d');
+
+function resizeOrbit() {
+  oc.width = oc.offsetWidth * devicePixelRatio;
+  oc.height = oc.offsetHeight * devicePixelRatio;
+  ox.scale(devicePixelRatio, devicePixelRatio);
+}
+resizeOrbit();
+window.addEventListener('resize', resizeOrbit);
+
+const techs = [
+  { label: 'C#', color: '#7b5ea7' }, { label: '.NET 8', color: '#00e5ff' },
+  { label: 'Angular', color: '#dd0031' }, { label: 'React', color: '#61dafb' },
+  { label: 'Azure', color: '#0089d6' }, { label: 'Docker', color: '#2496ed' },
+  { label: 'Kubernetes', color: '#326ce5' }, { label: 'Kafka', color: '#00ff99' },
+  { label: 'SQL Server', color: '#cc2927' }, { label: 'TypeScript', color: '#3178c6' },
+  { label: 'PostgreSQL', color: '#336791' }, { label: 'Redis', color: '#dc382d' },
+  { label: 'Terraform', color: '#7b42bc' }, { label: 'SignalR', color: '#00e5ff' },
+  { label: 'gRPC', color: '#6dbfff' }, { label: 'RabbitMQ', color: '#ff6600' },
+  { label: 'MongoDB', color: '#47a248' }, { label: 'AWS', color: '#ff9900' },
+];
+
+const RINGS = [
+  { r: 120, count: 6, speed: 0.004 },
+  { r: 200, count: 7, speed: -0.003 },
+  { r: 280, count: 5, speed: 0.002 },
+];
+
+let ringTimes = RINGS.map(() => 0);
+let rotX = 0.3, rotY = 0, dragging = false, lastMX, lastMY;
+
+oc.addEventListener('mousedown', e => { dragging = true; lastMX = e.clientX; lastMY = e.clientY; });
+window.addEventListener('mouseup', () => { dragging = false; });
+window.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  rotY += (e.clientX - lastMX) * 0.005;
+  rotX += (e.clientY - lastMY) * 0.005;
+  lastMX = e.clientX; lastMY = e.clientY;
+});
+
+oc.addEventListener('touchstart', e => { dragging = true; lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY; });
+window.addEventListener('touchend', () => { dragging = false; });
+window.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  rotY += (e.touches[0].clientX - lastMX) * 0.005;
+  rotX += (e.touches[0].clientY - lastMY) * 0.005;
+  lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY;
+});
+
+let zoom = 1;
+oc.addEventListener('wheel', e => { zoom -= e.deltaY * 0.001; zoom = Math.max(0.5, Math.min(2, zoom)); });
+
+function project(x, y, z) {
+  const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+  const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+  let ny = y * cosX - z * sinX, nz = y * sinX + z * cosX;
+  let nx = x * cosY + nz * sinY; nz = -x * sinY + nz * cosY;
+  const fov = 600, scale = (fov / (fov + nz)) * zoom;
+  return { sx: nx * scale, sy: ny * scale, scale, z: nz };
+}
+
+let techIdx = 0;
+function drawOrbit() {
+  const w = oc.offsetWidth, h = oc.offsetHeight, cx = w/2, cy = h/2;
+  ox.clearRect(0, 0, w, h);
+
+  const nodes = [];
+
+  RINGS.forEach((ring, ri) => {
+    ringTimes[ri] += ring.speed;
+    for (let i = 0; i < ring.count; i++) {
+      const a = (i / ring.count) * Math.PI * 2 + ringTimes[ri];
+      const x = Math.cos(a) * ring.r;
+      const z = Math.sin(a) * ring.r;
+      const y = 0;
+      const p = project(x, y, z);
+      const techI = (ri * 6 + i) % techs.length;
+      nodes.push({ ...p, label: techs[techI].label, color: techs[techI].color });
+    }
+    // draw ellipse orbit
+    ox.beginPath();
+    const pts = 80;
+    for (let i = 0; i <= pts; i++) {
+      const a = (i / pts) * Math.PI * 2 + ringTimes[ri];
+      const x3 = Math.cos(a) * ring.r, z3 = Math.sin(a) * ring.r;
+      const p3 = project(x3, 0, z3);
+      if (i === 0) ox.moveTo(cx + p3.sx, cy + p3.sy);
+      else ox.lineTo(cx + p3.sx, cy + p3.sy);
+    }
+    ox.strokeStyle = 'rgba(0,229,255,0.1)'; ox.lineWidth = 1; ox.stroke();
+  });
+
+  // center dot
+  const cp = project(0, 0, 0);
+  ox.beginPath(); ox.arc(cx + cp.sx, cy + cp.sy, 12, 0, Math.PI*2);
+  ox.fillStyle = '#00e5ff'; ox.fill();
+  ox.font = '700 11px Space Mono, monospace';
+  ox.fillStyle = '#030b12'; ox.textAlign = 'center'; ox.textBaseline = 'middle';
+  ox.fillText('AR', cx + cp.sx, cy + cp.sy);
+
+  nodes.sort((a, b) => a.z - b.z).forEach(n => {
+    const r = Math.max(6, 10 * n.scale);
+    ox.beginPath(); ox.arc(cx + n.sx, cy + n.sy, r, 0, Math.PI*2);
+    ox.fillStyle = n.color + 'cc'; ox.fill();
+    ox.strokeStyle = n.color; ox.lineWidth = 1.5; ox.stroke();
+    const fs = Math.max(8, 10 * n.scale);
+    ox.font = `600 ${fs}px Syne, sans-serif`;
+    ox.fillStyle = n.color; ox.textAlign = 'center';
+    ox.fillText(n.label, cx + n.sx, cy + n.sy + r + fs + 2);
+  });
+
+  if (!dragging) rotY += 0.004;
+  requestAnimationFrame(drawOrbit);
+}
+drawOrbit();
+
+// ─── SCROLL REVEAL ──────────────────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.timeline-item').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
